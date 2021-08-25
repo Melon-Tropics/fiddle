@@ -51,6 +51,12 @@ export function createMainWindow(): Electron.BrowserWindow {
     }
   });
 
+  browserWindow.on('focus', () => {
+    if (browserWindow) {
+      ipcMainManager.send(IpcEvents.SET_SHOW_ME_TEMPLATE);
+    }
+  });
+
   browserWindow.on('closed', () => {
     browserWindows = browserWindows.filter((bw) => browserWindow !== bw);
 
@@ -73,7 +79,7 @@ export function createMainWindow(): Electron.BrowserWindow {
     }
   });
 
-  ipcMainManager.handleOnce(IpcEvents.GET_APP_PATHS, () => {
+  ipcMainManager.handle(IpcEvents.GET_APP_PATHS, () => {
     const paths = {};
     const pathsToQuery = [
       'home',
